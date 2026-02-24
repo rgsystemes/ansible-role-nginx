@@ -39,7 +39,7 @@ nginx_supported_distributions:
     architectures: [x86_64, aarch64]
   debian:
     name: Debian
-    versions: [11, 12]
+    versions: [11, 12, 13]
     architectures: [x86_64, aarch64]
   oraclelinux:
     name: Oracle Linux
@@ -114,15 +114,15 @@ nginx_default_signing_key_rsa_pub: https://nginx.org/keys/nginx_signing.rsa.pub
 nginx_default_repository_alpine: "@nginx https://nginx.org/packages/{{ (nginx_branch == 'mainline') | ternary('mainline/', '') }}alpine/v{{ ansible_facts['distribution_version'] | regex_search('^[0-9]+\\.[0-9]+') }}/main"
 nginx_default_repository_amazon: https://nginx.org/packages/{{ (nginx_branch == 'mainline') | ternary('mainline/', '') }}/amzn{{ (ansible_facts['distribution_major_version'] is version('2', '==')) | ternary('2/$releasever', '/2023') }}/$basearch
 nginx_default_repository_debian:
-  - deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] https://nginx.org/packages/{{ (nginx_branch == 'mainline') | ternary('mainline/', '') }}{{ ansible_facts['distribution'] | lower }}/ {{ ansible_facts['distribution_release'] }} nginx
-  - deb-src [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] https://nginx.org/packages/{{ (nginx_branch == 'mainline') | ternary('mainline/', '') }}{{ ansible_facts['distribution'] | lower }}/ {{ ansible_facts['distribution_release'] }} nginx
+  - deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.asc] https://nginx.org/packages/{{ (nginx_branch == 'mainline') | ternary('mainline/', '') }}{{ ansible_facts['distribution'] | lower }}/ {{ ansible_facts['distribution_release'] }} nginx
+  - deb-src [signed-by=/usr/share/keyrings/nginx-archive-keyring.asc] https://nginx.org/packages/{{ (nginx_branch == 'mainline') | ternary('mainline/', '') }}{{ ansible_facts['distribution'] | lower }}/ {{ ansible_facts['distribution_release'] }} nginx
 nginx_default_repository_redhat: https://nginx.org/packages/{{ (nginx_branch == 'mainline') | ternary('mainline/', '') }}rhel/{{ ansible_facts['distribution_major_version'] }}/$basearch
 nginx_default_repository_suse: https://nginx.org/packages/{{ (nginx_branch == 'mainline') | ternary('mainline/', '') }}sles/{{ ansible_facts['distribution_major_version'] }}
 
 # Default NGINX Plus repositories
 nginx_plus_default_repository_alpine: https://pkgs.nginx.com/plus/alpine/v{{ ansible_facts['distribution_version'] | regex_search('^[0-9]+\.[0-9]+') }}/main
 nginx_plus_default_repository_amazon: https://pkgs.nginx.com/plus/amzn{{ (ansible_facts['distribution_major_version'] is version('2', '==')) | ternary('2/$releasever', '/2023') }}/$basearch
-nginx_plus_default_repository_debian: deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] https://pkgs.nginx.com/plus/{{ ansible_facts['distribution'] | lower }} {{ ansible_facts['distribution_release'] }} nginx-plus
+nginx_plus_default_repository_debian: deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.asc] https://pkgs.nginx.com/plus/{{ ansible_facts['distribution'] | lower }} {{ ansible_facts['distribution_release'] }} nginx-plus
 nginx_plus_default_repository_freebsd: https://pkgs.nginx.com/plus/freebsd/${ABI}/latest
 nginx_plus_default_repository_redhat: https://pkgs.nginx.com/plus/rhel/{{ ansible_facts['distribution_major_version'] }}/$basearch
 nginx_plus_default_repository_suse: https://pkgs.nginx.com/plus/sles/{{ ansible_facts['distribution_major_version'] }}?ssl_clientcert=/etc/ssl/nginx/nginx-repo-bundle.crt&ssl_verify=peer
