@@ -10,7 +10,7 @@
         mode: "0644"
         state: "{{ (nginx_state == 'uninstall') | ternary('absent', 'present') }}"
       loop: "{{ nginx_repository | default(nginx_default_repository_debian) }}"
-      when: ansible_facts['distribution_major_version'] <= '11'
+      when: ansible_facts['distribution_major_version'] <= '12'
 
     - name: Manage NGINX repository in Debian 13 and later
       ansible.builtin.deb822_repository:
