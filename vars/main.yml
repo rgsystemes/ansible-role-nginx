@@ -116,6 +116,7 @@ nginx_default_repository_amazon: https://nginx.org/packages/{{ (nginx_branch == 
 nginx_default_repository_debian:
   - deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.asc] https://nginx.org/packages/{{ (nginx_branch == 'mainline') | ternary('mainline/', '') }}{{ ansible_facts['distribution'] | lower }}/ {{ ansible_facts['distribution_release'] }} nginx
   - deb-src [signed-by=/usr/share/keyrings/nginx-archive-keyring.asc] https://nginx.org/packages/{{ (nginx_branch == 'mainline') | ternary('mainline/', '') }}{{ ansible_facts['distribution'] | lower }}/ {{ ansible_facts['distribution_release'] }} nginx
+nginx_default_deb822_repository_debian: https://nginx.org/packages/{{ (nginx_branch == 'mainline') | ternary('mainline/', '') }}{{ ansible_facts['distribution'] | lower }}
 nginx_default_repository_redhat: https://nginx.org/packages/{{ (nginx_branch == 'mainline') | ternary('mainline/', '') }}rhel/{{ ansible_facts['distribution_major_version'] }}/$basearch
 nginx_default_repository_suse: https://nginx.org/packages/{{ (nginx_branch == 'mainline') | ternary('mainline/', '') }}sles/{{ ansible_facts['distribution_major_version'] }}
 

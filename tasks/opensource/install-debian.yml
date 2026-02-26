@@ -1,13 +1,28 @@
 ---
 - name: (Debian/Ubuntu) {{ (nginx_setup == 'uninstall') | ternary('Remove', 'Configure') }} NGINX repository
-  ansible.builtin.apt_repository:
-    filename: nginx
-    repo: "{{ item }}"
-    update_cache: true
-    mode: "0644"
-    state: "{{ (nginx_state == 'uninstall') | ternary('absent', 'present') }}"
-  loop: "{{ nginx_repository | default(nginx_default_repository_debian) }}"
   when: nginx_manage_repo | bool
+  block:
+    - name: Manage NGINX repository in Debian 12 and earlier
+      ansible.builtin.apt_repository:
+        filename: nginx
+        repo: "{{ item }}"
+        update_cache: true
+        mode: "0644"
+        state: "{{ (nginx_state == 'uninstall') | ternary('absent', 'present') }}"
+      loop: "{{ nginx_repository | default(nginx_default_repository_debian) }}"
+      when: ansible_facts['distribution_major_version'] <= '12'
+
+    - name: Manage NGINX repository in Debian 13 and later
+      ansible.builtin.deb822_repository:
+        name: nginx
+        types: deb
+        uris: "{{ nginx_repository | default(nginx_default_deb822_repository_debian) }}"
+        suites: "{{ ansible_facts['distribution_release'] }}"
+        components: nginx
+        signed_by: /usr/share/keyrings/nginx-archive-keyring.asc
+        state: "{{ (nginx_state == 'uninstall') | ternary('absent', 'present') }}"
+        enabled: true
+      when: ansible_facts['distribution_major_version'] >= '13'
 
 - name: (Debian/Ubuntu) {{ (nginx_setup == 'uninstall') | ternary('Unpin', 'Pin') }} NGINX repository
   ansible.builtin.blockinfile:
